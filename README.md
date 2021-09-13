@@ -19,7 +19,7 @@
 
 This Project is for developers who want to kickstart project in Laravel 8 and InertiaJS with Vue 3. I have created this project to start with basic admin panel features like user management with Roles. 
 
-![](https://github.com/jackdanielzzzz/laravel-jetstream-inertia-master/blob/main/screenshot.png)
+![](https://raw.githubusercontent.com/jackdanielzzzz/laravel-jetstream-inertia-master/master/screenshot.png)
 
 ## Installation
 
