@@ -60,9 +60,7 @@ Generate application key:
 php artisan key:generate
 ```
 
-Create an MySQL database:
-
-configure database in .env
+Configure database in .env
 ```sh
 DB_DATABASE=laravel
 ```
@@ -95,7 +93,7 @@ mix.browserSync({
 });
 ```
 
-Configure browsersync in .env
+Configure browsersync port in .env
 
 ```sh
 APP_URL=http://127.0.0.1:8000
@@ -109,4 +107,24 @@ npm run watch
 
 ## First Start
 
-There is no user by default. Please register first to use the admin panel. Create their roles after logging in. Change the empty role for the newly created user.
+`1. register new user` : There is no user by default. Please register first to use the admin panel.
+
+`2. add new role` : Create a role after logging in.
+
+`3. change role` : Change the empty role for the newly created user.
+
+
+## Optional Profile Photo
+
+Configure features in config/jetstream.php:
+
+```sh
+'features' => [
+        // Features::termsAndPrivacyPolicy(),
+        Features::profilePhotos(),
+        // Features::api(),
+        // Features::teams(['invitations' => true]),
+        Features::accountDeletion(),
+    ],
+```
+
