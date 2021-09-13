@@ -1,0 +1,158 @@
+<template>
+    <app-layout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Add Post
+            </h2>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+
+                <jet-validation-errors class="mt-4 mb-4 bg-red-100 p-4 border border-red-500 rounded-lg" />
+                <form @submit.prevent="submit">
+
+                    <div class="px-4 py-5 bg-white sm:p-6 shadow-xl sm:rounded-tl-md sm:rounded-tr-md">
+                        
+                        <div class="mt-4">
+                            <jet-label for="category_id" value="Category" />
+                            <select name="category_id" id="category_id" v-model="form.category_id" class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm w-full">
+                                <option v-for="category in Categories" :key="category.id" :value="category.id" >{{ category.title }}</option>
+                            </select>
+                        </div>    
+                        <div class="mt-4">
+                            <jet-label for="title" value="Title" />
+                            <jet-input id="title" type="text" class="mt-1 block w-full" v-model="form.title" required />
+                        </div>
+                        <div class="mt-4">
+                            <jet-label for="slug" value="Slug" />
+                            <jet-input id="slug" type="text" class="mt-1 block w-full" v-model="slug" required />
+                        </div>
+                        <div class="mt-4">
+                            <jet-label for="image" value="Image" />
+                            <input type="file" accept="image/*" @input="form.image_file = $event.target.files[0]" id="image">
+                        </div>
+                        <div class="mt-4">
+                            <jet-label for="short_description" value="Short description" />
+                            <jet-input id="short_description" type="text" class="mt-1 block w-full" v-model="form.sort_description" required />
+                        </div>
+                        <div class="mt-4">
+                            <jet-label for="description" value="Body" />
+                            <textarea v-model="form.description" name="description" id="description" rows="10" class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"></textarea>
+                        </div>
+                        <label 
+                            for="is_featured"
+                            class="flex items-center cursor-pointer"
+                        >
+                            <!-- toggle -->
+                            <div class="relative">
+                            <!-- input -->
+                            <input id="is_featured" v-model="form.is_featured" type="checkbox" class="sr-only" />
+                            <!-- line -->
+                            <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+                            <!-- dot -->
+                            <div class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
+                            </div>
+                            <!-- label -->
+                            <div class="ml-3 text-gray-700 font-medium">
+                            Is Featured
+                            </div>
+                        </label>
+                            
+                    </div>
+                    <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow-xl sm:rounded-bl-md sm:rounded-br-md">
+                        <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            Save
+                        </jet-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </app-layout>
+</template>
+<style>
+/* Toggle A */
+input:checked ~ .dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
+
+/* Toggle B */
+input:checked ~ .dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
+</style>
+<script>
+    import AppLayout from '@/Layouts/AppLayout'
+    import JetInput from '@/Jetstream/Input'
+    import JetButton from '@/Jetstream/Button'
+    import JetLabel from '@/Jetstream/Label'
+    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+
+    export default {
+        components: {
+            AppLayout,
+            JetInput,
+            JetLabel,
+            JetButton,
+            JetValidationErrors,
+        },
+        props:{
+            Categories: Array,
+        },
+        data() {
+            return {
+                slug:'',
+                form: this.$inertia.form({
+                    title: '',
+                    slug: '',
+                    image_file: '',
+                    category_id: '',
+                    description: '',
+                    sort_description: '',
+                    is_featured: '',
+                })
+            }
+        },
+        computed: {
+            slug: function() {
+            var slug = this.sanitizeTitle(this.form.title);
+            return slug;
+            }
+        },
+        methods: {
+            sanitizeTitle: function(title) {
+                var slug = "";
+                // Change to lower case
+                var titleLower = title.toLowerCase();
+                // Letter "e"
+                slug = titleLower.replace(/e|é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/gi, 'e');
+                // Letter "a"
+                slug = slug.replace(/a|á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/gi, 'a');
+                // Letter "o"
+                slug = slug.replace(/o|ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/gi, 'o');
+                // Letter "u"
+                slug = slug.replace(/u|ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/gi, 'u');
+                // Letter "d"
+                slug = slug.replace(/đ/gi, 'd');
+                // Trim the last whitespace
+                slug = slug.replace(/\s*$/g, '');
+                // Change whitespace to "-"
+                slug = slug.replace(/\s+/g, '-');
+                // alert(this.form.title);
+                this.form.slug = slug
+                return slug;
+            },
+            submit() {
+                this.form
+                    .transform(data => ({
+                        ... data,
+                    }))
+                    .post(this.route('posts.store'), {
+                        // onFinish: () => this.form.reset('password'),
+                    })
+            }
+        }
+    }
+</script>
