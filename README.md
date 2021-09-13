@@ -109,4 +109,4 @@ npm run watch
 
 ## First Start
 
-There is no user by default. Please register first to use the admin panel.
+There is no user by default. Please register first to use the admin panel. Create their roles after logging in. Change the empty role for the newly created user.
